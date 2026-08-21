@@ -199,7 +199,7 @@ body{
       <svg id="map" viewBox="0 0 900 560" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mapa obchodních regionů ČR">
         <defs>
           <pattern id="split-pattern" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
-            <rect width="10" height="10" fill="var(--rep-dolejsi)"/>
+            <rect width="10" height="10" fill="var(--rep-sury)"/>
             <rect width="5" height="10" fill="var(--rep-nguyen)"/>
           </pattern>
         </defs>
@@ -334,7 +334,10 @@ body{
   const proj = d3.geoMercator().fitExtent([[20,20],[W-20,H-20]], OKRESY_GEO);
   const path = d3.geoPath(proj);
   const layer = d3.select('#okres-layer');
-  layer.selectAll('path').data(OKRESY_GEO.features).enter().append('path')
+  // Větší okresy kreslíme první, aby plně obklopené okresy (Brno-město uvnitř
+  // Brno-venkova) zůstaly viditelné a klikatelné navrchu.
+  const okresFeatures = OKRESY_GEO.features.slice().sort((a,b) => path.area(b) - path.area(a));
+  layer.selectAll('path').data(okresFeatures).enter().append('path')
     .attr('class', 'region')
     .attr('d', path)
     .each(function(d){
