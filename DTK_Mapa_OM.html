@@ -251,6 +251,7 @@ input,select{font:inherit;color:inherit}
   cursor:pointer;
   transition:fill var(--transition),opacity var(--transition),stroke-width var(--transition);
   stroke:#fff;stroke-width:.5;stroke-linejoin:round;
+  fill-rule:evenodd;
 }
 .map-svg path.region:hover,
 .map-svg path.region:focus{outline:none;stroke:var(--ink);stroke-width:1.5}
@@ -362,21 +363,16 @@ input,select{font:inherit;color:inherit}
 }
 .rep-pair-result.miss{background:#FEE2E2;color:#991B1B}
 
-.country-card{
-  background:linear-gradient(135deg,#242933 0%,#191919 100%);
-  color:#fff;border:0;
-}
-.country-card .card-title{color:rgba(255,255,255,.7)}
 .country-card .country-rep{
-  display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:10px;
-  background:rgba(255,255,255,.06);margin:0 16px 10px;transition:background var(--transition);
+  display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;
+  background:var(--bg);margin:0 16px 10px;transition:background var(--transition);
   cursor:pointer;
 }
-.country-card .country-rep:hover{background:rgba(255,255,255,.12)}
+.country-card .country-rep:hover{background:var(--border-soft)}
 .country-card .country-rep .avatar{width:38px;height:38px;font-size:14px;box-shadow:none}
 .country-rep-text{min-width:0;flex:1}
-.country-rep-name{font-size:14px;font-weight:600;line-height:1.2}
-.country-rep-role{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
+.country-rep-name{font-size:14px;font-weight:600;line-height:1.2;color:var(--ink)}
+.country-rep-role{font-size:11px;color:var(--muted);margin-top:2px}
 .country-card .card-body{padding-bottom:14px}
 
 /* FOOTER */
@@ -624,6 +620,51 @@ let svg, czLayer, prgLayer, czProjection, prgProjection;
 let okresPaths = new Map();    // name -> SVGElement
 let praguePaths = new Map();   // admin -> SVGElement[]
 
+/* Okres, který leží celý uvnitř jiného (Brno-město v Brno-venkově), není
+   v datech vyříznutý — obklopující okres je plný polygon a maluje se pod ním.
+   Při ztlumení mapy se dvě průhledné vrstvy sečtou a enkláva pak vypadá sytější
+   než ostatní regiony. Obklopující okres proto vyřízneme, aby se plochy
+   nepřekrývaly. */
+function punchEnclaves(collection){
+  const polygonsOf = g => g.type === 'Polygon' ? [g.coordinates] : g.coordinates;
+  const bboxOf = g => {
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    polygonsOf(g).forEach(p => p[0].forEach(c => {
+      if (c[0] < x0) x0 = c[0];
+      if (c[0] > x1) x1 = c[0];
+      if (c[1] < y0) y0 = c[1];
+      if (c[1] > y1) y1 = c[1];
+    }));
+    return [x0,y0,x1,y1];
+  };
+  const inRing = (pt, ring) => {
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++){
+      const xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1];
+      if ((yi > pt[1]) !== (yj > pt[1]) && pt[0] < (xj - xi) * (pt[1] - yi) / (yj - yi) + xi) inside = !inside;
+    }
+    return inside;
+  };
+  const features = collection.features.map(f => ({
+    type: f.type,
+    properties: f.properties,
+    geometry: { type: f.geometry.type, coordinates: JSON.parse(JSON.stringify(f.geometry.coordinates)) }
+  }));
+  const boxes = features.map(f => bboxOf(f.geometry));
+  features.forEach((inner, i) => {
+    features.forEach((outer, j) => {
+      if (i === j) return;
+      const a = boxes[i], b = boxes[j];
+      if (!(a[0] > b[0] && a[1] > b[1] && a[2] < b[2] && a[3] < b[3])) return;
+      const probe = polygonsOf(inner.geometry)[0][0][0];
+      const host = polygonsOf(outer.geometry).find(p => inRing(probe, p[0]));
+      if (!host) return;
+      polygonsOf(inner.geometry).forEach(p => host.push(p[0].slice()));
+    });
+  });
+  return { type: collection.type, features };
+}
+
 function renderMap(){
   svg = d3.select('#map');
   czLayer = svg.select('#cz-layer');
@@ -637,7 +678,7 @@ function renderMap(){
 
   // Větší okresy kreslíme první, aby plně obklopené okresy (Brno-město uvnitř
   // Brno-venkova) zůstaly viditelné a klikatelné navrchu.
-  const czFeatures = OKRESY_GEO.features.slice().sort((a,b) => czPath.area(b) - czPath.area(a));
+  const czFeatures = punchEnclaves(OKRESY_GEO).features.sort((a,b) => czPath.area(b) - czPath.area(a));
   czLayer.selectAll('path').data(czFeatures).enter().append('path')
     .attr('class','region')
     .attr('d', czPath)
@@ -1089,7 +1130,7 @@ function renderCountryCard(){
       </div>
     </div>`;
   });
-  if (!html) html = `<div style="padding:0 16px 16px;color:rgba(255,255,255,.7);font-size:13px">${escapeHtml(t('country.empty'))}</div>`;
+  if (!html) html = `<div style="padding:0 16px 16px;color:var(--muted);font-size:13px">${escapeHtml(t('country.empty'))}</div>`;
   body.innerHTML = html;
   body.querySelectorAll('.country-rep').forEach(el => {
     el.addEventListener('click', () => selectRepGlobal(el.dataset.rep));
