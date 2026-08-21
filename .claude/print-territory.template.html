@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Dotykačka · Obchodní teritoria 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Caveat:wght@400;500;700&display=swap">
+<style>
+:root{
+  --brand:#31B24A;
+  --brand-dark:#27902E;
+  --brand-darker:#1F7024;
+  --brand-light:#E8F5EA;
+  --ink:#191919;
+  --ink-soft:#404959;
+  --muted:#716C80;
+  --bg:#F6F7FA;
+  --surface:#ffffff;
+  --border:#E5E7EA;
+  --border-soft:#EFF1F3;
+  --rep-bures:#31B24A;
+  --rep-dolejsi:#0084F4;
+  --rep-hrdlickova:#F4C905;
+  --rep-nguyen:#E94555;
+  --rep-hladikova:#A115B0;
+  --rep-ivanic:#1AB8D1;
+  --rep-kukla:#EC4899;
+  --rep-lancuch:#F7A600;
+  --rep-hadasova:#31B08A;
+  --rep-sury:#7A574A;
+  --rep-unassigned:#716C80;
+  --rep-hajsky:#242933;
+  --rep-klar:#404959;
+}
+@page { size: A4 landscape; margin: 0; }
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+.page{
+  width:297mm;height:210mm;
+  display:grid;grid-template-rows:auto auto 1fr;
+  page-break-after:always;
+  break-after:page;
+  position:relative;
+  overflow:hidden;
+}
+.page:last-child{page-break-after:auto;break-after:auto}
+
+.page-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8mm 12mm 4mm;
+  border-bottom:1px solid var(--border-soft);
+}
+.eyebrow{
+  font-size:8pt;font-weight:700;letter-spacing:.22em;color:var(--brand);
+  text-transform:uppercase;
+}
+.title-block{display:flex;flex-direction:column;gap:1mm}
+.title{
+  font-size:22pt;font-weight:800;letter-spacing:.04em;color:var(--ink);
+  text-transform:uppercase;line-height:1;margin:0;
+}
+.subtitle{
+  font-family:'Caveat',cursive;font-weight:500;font-size:16pt;color:var(--brand-dark);
+  line-height:1;margin:0;
+}
+.brand-mark{
+  font-weight:800;font-size:13pt;color:var(--ink);
+  letter-spacing:.08em;
+}
+.intro{
+  padding:3mm 12mm 4mm;
+  font-size:9pt;color:var(--ink-soft);
+  border-bottom:1px solid var(--border-soft);
+}
+
+.page-body{
+  display:grid;
+  grid-template-columns:165mm 1fr;
+  gap:0;
+  padding:0;
+  min-height:0;
+}
+
+.map-area{
+  position:relative;
+  padding:4mm 6mm 4mm 12mm;
+  display:flex;flex-direction:column;
+  min-height:0;
+}
+#map{
+  width:100%;height:100%;
+  background:linear-gradient(180deg,#FBFCFD 0%,#F4F6F8 100%);
+  border-radius:4mm;
+}
+#map path.region{
+  stroke:#fff;stroke-width:.5;stroke-linejoin:round;
+}
+#map path.region.split{stroke:#fff}
+#map .kraj-label{
+  font-size:7pt;font-weight:600;fill:var(--ink);
+  paint-order:stroke fill;
+  stroke:rgba(255,255,255,.85);stroke-width:2;stroke-linejoin:round;
+  pointer-events:none;
+  text-anchor:middle;
+}
+#map .kraj-rep-label{
+  font-size:6pt;font-weight:500;fill:var(--ink-soft);
+  paint-order:stroke fill;
+  stroke:rgba(255,255,255,.85);stroke-width:2;stroke-linejoin:round;
+  pointer-events:none;
+  text-anchor:middle;
+}
+.reps-column{
+  padding:4mm 12mm 4mm 6mm;
+  display:flex;flex-direction:column;gap:2mm;
+  min-height:0;
+}
+.reps-section-title{
+  font-size:7pt;font-weight:700;color:var(--brand);
+  letter-spacing:.18em;text-transform:uppercase;margin:0 0 1mm 0;
+}
+.rep-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:2mm;
+}
+.rep-card{
+  display:flex;align-items:flex-start;gap:2mm;
+  padding:2mm;
+  border:1px solid var(--border);
+  border-radius:2mm;
+  background:var(--surface);
+  break-inside:avoid;
+  page-break-inside:avoid;
+}
+.rep-avatar{
+  width:9mm;height:9mm;min-width:9mm;border-radius:50%;
+  display:grid;place-items:center;color:#fff;
+  font-weight:700;font-size:8pt;letter-spacing:.02em;
+  box-shadow:0 1px 3px rgba(0,0,0,.15);
+}
+.rep-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:.4mm}
+.rep-name{font-size:8.5pt;font-weight:700;color:var(--ink);line-height:1.15}
+.rep-position{font-size:6.5pt;font-weight:600;color:var(--brand-dark);text-transform:uppercase;letter-spacing:.04em;line-height:1.15}
+.rep-coverage{font-size:6.5pt;color:var(--ink-soft);line-height:1.25}
+.rep-contact{
+  display:flex;flex-direction:column;gap:.2mm;
+  font-size:6.5pt;color:var(--muted);line-height:1.2;
+  margin-top:.5mm;
+}
+.rep-contact a{color:var(--muted);text-decoration:none}
+.country-band{
+  margin-top:3mm;padding:2mm 3mm;
+  background:linear-gradient(135deg,#242933 0%,#191919 100%);
+  border-radius:2mm;color:#fff;
+  display:flex;flex-direction:column;gap:1.5mm;
+}
+.country-band-title{
+  font-size:7pt;font-weight:700;color:rgba(255,255,255,.7);
+  letter-spacing:.18em;text-transform:uppercase;
+}
+.country-rep{display:flex;align-items:center;gap:2mm}
+.country-rep .rep-avatar{box-shadow:none}
+.country-rep-info{display:flex;flex-direction:column;line-height:1.2}
+.country-rep-name{font-size:8pt;font-weight:700}
+.country-rep-role{font-size:6.5pt;color:rgba(255,255,255,.7)}
+.country-rep-contact{font-size:6.5pt;color:rgba(255,255,255,.6)}
+.country-rep-contact a{color:rgba(255,255,255,.6);text-decoration:none}
+
+.praha-rep-coverage{
+  font-size:7pt;color:var(--ink-soft);line-height:1.35;
+  margin-top:.5mm;
+}
+.praha-rep-coverage strong{color:var(--ink);font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header class="page-header">
+    <div class="title-block">
+      <span class="eyebrow">SALES · ČR</span>
+      <h1 class="title">Obchodní regiony</h1>
+      <span class="subtitle">Kde najdete svého obchodního manažera</span>
+    </div>
+    <div class="brand-mark">DOTYKAČKA</div>
+  </header>
+
+  <div class="intro">
+    Každý region má svého obchodního manažera. Praha je obsluhována podle obvodů. Praha-východ je rozdělena podle obce.
+  </div>
+
+  <main class="page-body">
+    <section class="map-area">
+      <svg id="map" viewBox="0 0 900 560" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mapa obchodních regionů ČR">
+        <defs>
+          <pattern id="split-pattern" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
+            <rect width="10" height="10" fill="var(--rep-dolejsi)"/>
+            <rect width="5" height="10" fill="var(--rep-nguyen)"/>
+          </pattern>
+        </defs>
+        <g id="okres-layer"></g>
+        <g id="kraj-boundary"></g>
+        <g id="labels"></g>
+      </svg>
+    </section>
+
+    <section class="reps-column">
+      <h2 class="reps-section-title">Obchodní manažeři · Regionální</h2>
+      <div class="rep-grid" id="regional-grid"></div>
+
+      <div class="country-band">
+        <div class="country-band-title">Celostátní kontakty</div>
+        <div id="country-list"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="page">
+  <header class="page-header">
+    <div class="title-block">
+      <span class="eyebrow">SALES · PRAHA</span>
+      <h1 class="title">Obchodní regiony</h1>
+      <span class="subtitle">Praha · správní obvody</span>
+    </div>
+    <div class="brand-mark">DOTYKAČKA</div>
+  </header>
+
+  <div class="intro">
+    Každý region má svého obchodního manažera. Praha je obsluhována podle obvodů. Praha-východ je rozdělena podle obce.
+  </div>
+
+  <main class="page-body">
+    <section class="map-area">
+      <svg id="map-praha" viewBox="0 0 900 560" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mapa Praha · správní obvody">
+        <g id="praha-layer"></g>
+        <g id="praha-labels"></g>
+      </svg>
+    </section>
+
+    <section class="reps-column">
+      <h2 class="reps-section-title">Obchodní manažeři · Praha</h2>
+      <div id="praha-rep-list"></div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script>
+/* === DATA INJECTED HERE BY POWERSHELL === */
+/*__INJECT_DATA__*/
+
+/* === RENDERING === */
+(function(){
+  // Helper: rep color CSS var
+  const repColor = id => `var(--rep-${id})`;
+  const repsById = Object.fromEntries(DATA.reps.map(r => [r.id, r]));
+  function repInitials(r){
+    const p = r.name.trim().split(/\s+/);
+    return (p.length === 1 ? p[0][0] : p[0][0] + p[p.length-1][0]).toUpperCase();
+  }
+
+  // Build okres -> kraj map
+  const okresKraj = {};
+  Object.entries(DATA.krajOkresy).forEach(([kraj, list]) => list.forEach(o => okresKraj[o] = kraj));
+
+  // Build rep -> krajs map (which krajs each rep covers, with okres counts)
+  const repKrajs = {};
+  Object.entries(DATA.okresRep).forEach(([okres, info]) => {
+    const ids = Array.isArray(info) ? info : [info];
+    const kraj = okresKraj[okres];
+    ids.forEach(id => {
+      repKrajs[id] = repKrajs[id] || {};
+      repKrajs[id][kraj] = (repKrajs[id][kraj] || 0) + 1;
+    });
+  });
+  // Add Praha admin reps
+  const prahaReps = new Set();
+  Object.values(DATA.prahaAdminRep).forEach(id => prahaReps.add(id));
+  prahaReps.forEach(id => {
+    repKrajs[id] = repKrajs[id] || {};
+    repKrajs[id]['Hlavní město Praha'] = (repKrajs[id]['Hlavní město Praha'] || 0) + 1;
+  });
+
+  // Render regional rep cards (10 regional CZ reps)
+  const regional = DATA.reps.filter(r => r.role === 'regional' && r.country === 'CZ')
+    .sort((a,b) => a.lastName.localeCompare(b.lastName,'cs'));
+  const grid = document.getElementById('regional-grid');
+  regional.forEach(r => {
+    const krajs = repKrajs[r.id] || {};
+    const krajList = Object.keys(krajs).sort((a,b) => krajs[b] - krajs[a]);
+    const krajText = krajList
+      .map(k => `${k.replace(/ kraj$/i,'').replace(/^Kraj /,'').replace('Hlavní město Praha','Praha')}`)
+      .join(' · ') || '—';
+    const card = document.createElement('div');
+    card.className = 'rep-card';
+    card.innerHTML = `
+      <div class="rep-avatar" style="background:${repColor(r.id)}">${repInitials(r)}</div>
+      <div class="rep-info">
+        <div class="rep-name">${r.name}</div>
+        <div class="rep-position">${r.position}</div>
+        <div class="rep-coverage">${krajText}</div>
+        <div class="rep-contact">
+          <span>${r.email}</span>
+          <span>${r.phone}</span>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  // Render country-wide reps (KAM + BDM)
+  const country = DATA.reps.filter(r => r.role === 'kam' || r.role === 'bdm');
+  const cList = document.getElementById('country-list');
+  country.forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'country-rep';
+    row.innerHTML = `
+      <div class="rep-avatar" style="background:${repColor(r.id)}">${repInitials(r)}</div>
+      <div class="country-rep-info">
+        <span class="country-rep-name">${r.name}</span>
+        <span class="country-rep-role">${r.position}</span>
+        <span class="country-rep-contact">${r.email} · ${r.phone}</span>
+      </div>`;
+    cList.appendChild(row);
+  });
+
+  // === MAP RENDERING ===
+  const W = 900, H = 560;
+  const proj = d3.geoMercator().fitExtent([[20,20],[W-20,H-20]], OKRESY_GEO);
+  const path = d3.geoPath(proj);
+  const layer = d3.select('#okres-layer');
+  layer.selectAll('path').data(OKRESY_GEO.features).enter().append('path')
+    .attr('class', 'region')
+    .attr('d', path)
+    .each(function(d){
+      const name = d.properties.name;
+      if (name === 'Hlavní město Praha'){
+        this.style.fill = 'var(--brand-dark)';
+        return;
+      }
+      const info = DATA.okresRep[name];
+      if (Array.isArray(info)){
+        this.style.fill = 'url(#split-pattern)';
+      } else if (info){
+        this.style.fill = repColor(info);
+      } else {
+        this.style.fill = 'var(--rep-unassigned)';
+      }
+    });
+
+  // Compute kraj centroids for labels by aggregating okres centroids
+  const krajCentroids = {};
+  Object.entries(DATA.krajOkresy).forEach(([kraj, okresList]) => {
+    const pts = [];
+    OKRESY_GEO.features.forEach(f => {
+      if (okresList.includes(f.properties.name)) {
+        const c = path.centroid(f);
+        if (!isNaN(c[0])) pts.push(c);
+      }
+    });
+    if (pts.length){
+      const sx = pts.reduce((s,p) => s + p[0], 0) / pts.length;
+      const sy = pts.reduce((s,p) => s + p[1], 0) / pts.length;
+      krajCentroids[kraj] = [sx, sy];
+    }
+  });
+  // Add Praha centroid (it has its own feature, not in krajOkresy)
+  const prahaF = OKRESY_GEO.features.find(f => f.properties.name === 'Hlavní město Praha');
+  if (prahaF){ krajCentroids['Hlavní město Praha'] = path.centroid(prahaF); }
+
+  // Pick dominant rep per kraj (rep with most okresy in that kraj)
+  function dominantRepLastName(krajName){
+    if (krajName === 'Hlavní město Praha') return 'pražský tým';
+    const counts = {};
+    (DATA.krajOkresy[krajName] || []).forEach(okres => {
+      const info = DATA.okresRep[okres];
+      const ids = Array.isArray(info) ? info : (info ? [info] : []);
+      ids.forEach(id => counts[id] = (counts[id] || 0) + 1);
+    });
+    const entries = Object.entries(counts).sort((a,b) => b[1] - a[1]);
+    if (!entries.length) return '';
+    // If top two reps tie or are close, show both surnames
+    const top = entries[0];
+    const second = entries[1];
+    if (second && second[1] === top[1]){
+      return [top, second].map(([id]) => repsById[id]?.lastName || '').join(' · ');
+    }
+    return repsById[top[0]]?.lastName || '';
+  }
+
+  const labelsG = d3.select('#labels');
+  Object.entries(krajCentroids).forEach(([kraj, [x, y]]) => {
+    // Praha + Středočeský merged into one label, no rep names
+    if (kraj === 'Hlavní město Praha'){
+      labelsG.append('text')
+        .attr('class', 'kraj-label')
+        .attr('x', x)
+        .attr('y', y)
+        .text('Praha & Středočeský kraj');
+      return;
+    }
+    if (kraj === 'Středočeský kraj') return; // covered by the merged label
+    const krajShort = kraj.replace(/ kraj$/i,'').replace(/^Kraj /,'');
+    labelsG.append('text')
+      .attr('class', 'kraj-label')
+      .attr('x', x)
+      .attr('y', y - 4)
+      .text(krajShort);
+    labelsG.append('text')
+      .attr('class', 'kraj-rep-label')
+      .attr('x', x)
+      .attr('y', y + 8)
+      .text(dominantRepLastName(kraj));
+  });
+
+  // === PAGE 2: PRAHA ===
+  // Group Prague MCs by admin district + rep
+  const prahaProj = d3.geoMercator().fitExtent([[20,20],[W-20,H-20]], PRAGUE_GEO);
+  const prahaPath = d3.geoPath(prahaProj);
+  const prahaG = d3.select('#praha-layer');
+  prahaG.selectAll('path').data(PRAGUE_GEO.features).enter().append('path')
+    .attr('class', 'region')
+    .attr('d', prahaPath)
+    .each(function(d){
+      const admin = d.properties.admin;
+      const id = DATA.prahaAdminRep[admin];
+      this.style.fill = id ? repColor(id) : 'var(--rep-unassigned)';
+    });
+
+  // Compute admin centroids for labels (average of all MČs in that admin)
+  const adminCentroids = {};
+  PRAGUE_GEO.features.forEach(f => {
+    const admin = f.properties.admin;
+    const c = prahaPath.centroid(f);
+    if (isNaN(c[0])) return;
+    if (!adminCentroids[admin]) adminCentroids[admin] = { sx:0, sy:0, n:0 };
+    adminCentroids[admin].sx += c[0];
+    adminCentroids[admin].sy += c[1];
+    adminCentroids[admin].n += 1;
+  });
+  const prahaLabelsG = d3.select('#praha-labels');
+  Object.entries(adminCentroids).forEach(([admin, agg]) => {
+    const x = agg.sx / agg.n;
+    const y = agg.sy / agg.n;
+    prahaLabelsG.append('text')
+      .attr('class', 'kraj-label')
+      .attr('x', x).attr('y', y)
+      .style('font-size','5.5pt')
+      .text(admin.replace('Praha ','P'));
+  });
+
+  // Build rep -> [Praha N admin districts]
+  const prahaByRep = {};
+  Object.entries(DATA.prahaAdminRep).forEach(([admin, id]) => {
+    prahaByRep[id] = prahaByRep[id] || [];
+    prahaByRep[id].push(admin);
+  });
+  // Sort admins numerically within each rep
+  Object.values(prahaByRep).forEach(list => list.sort((a,b) =>
+    parseInt(a.split(' ')[1]) - parseInt(b.split(' ')[1])
+  ));
+  // Render Prague rep cards (1 column, larger cards)
+  const prahaList = document.getElementById('praha-rep-list');
+  const sortedIds = Object.keys(prahaByRep).sort((a,b) => prahaByRep[b].length - prahaByRep[a].length);
+  sortedIds.forEach(id => {
+    const r = repsById[id];
+    if (!r) return;
+    const obvody = prahaByRep[id];
+    // Praha-východ obce supplement for Dolejší (north) and Nguyen (south)
+    let obceLine = '';
+    if (id === DATA.prahaVychod.northRep){
+      const obce = DATA.prahaVychod.northObce;
+      obceLine = `<div class="praha-rep-coverage"><strong>${obce.length} obcí, Praha-východ:</strong> ${obce.join(', ')}.</div>`;
+    } else if (id === DATA.prahaVychod.southRep){
+      const obce = DATA.prahaVychod.southObce;
+      obceLine = `<div class="praha-rep-coverage"><strong>${obce.length} obcí, Praha-východ:</strong> ${obce.join(', ')}.</div>`;
+    }
+    const card = document.createElement('div');
+    card.className = 'rep-card';
+    card.style.marginBottom = '2mm';
+    card.innerHTML = `
+      <div class="rep-avatar" style="background:${repColor(id)}">${repInitials(r)}</div>
+      <div class="rep-info">
+        <div class="rep-name">${r.name}</div>
+        <div class="rep-position">${r.position}</div>
+        <div class="praha-rep-coverage"><strong>${obvody.length} obvodů:</strong> ${obvody.join(' · ')}</div>
+        ${obceLine}
+        <div class="rep-contact">
+          <span>${r.email}</span>
+          <span>${r.phone}</span>
+        </div>
+      </div>`;
+    prahaList.appendChild(card);
+  });
+})();
+</script>
+</body>
+</html>

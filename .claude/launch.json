@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "static-http",
+      "runtimeExecutable": "powershell.exe",
+      "runtimeArgs": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:\\Users\\matej\\OneDrive\\CLOUD DRIVE - OneDrive & Google Drive\\Umělá Inteligence - AI\\Claude Projects\\DTK_Mapa_OM\\.claude\\serve.ps1",
+        "-Port",
+        "8000"
+      ],
+      "port": 8000
+    }
+  ]
+}
